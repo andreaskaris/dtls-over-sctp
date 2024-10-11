@@ -103,8 +103,8 @@ BIO *setup_ssl_bio(int fd) {
 
 /*
  * print_connect_accept_failure is a helper function that's used to reduce code
- * duplication. When SSL_connect (client) or SSL_accept (server) fail, the error handling is the
- * same. Avoid code duplication by moving here.
+ * duplication. When SSL_connect (client) or SSL_accept (server) fail, the error
+ * handling is the same. Avoid code duplication by moving here.
  */
 int print_connect_accept_failure(SSL *ssl, int ret) {
   switch (SSL_get_error(ssl, ret)) {
