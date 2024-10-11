@@ -32,11 +32,11 @@ struct options {
  */
 void usage(char *program_name) {
   printf("Usage:\n");
-  printf("  %s -h <socket listen address> -p <socket listen port> -k <server "
-         "cert private key> -l <server cert pem>\n",
+  printf("  %s -h <socket listen address> -p <socket listen port> -k "
+         "<cert private key> -l <cert pem>\n",
          program_name);
   printf("  %s -c -h <destination IP> -p <destination port> -i <number of "
-         "messages>\n",
+         "messages> -k <cert private key> -l <cert pem>\n",
          program_name);
   exit(1);
 }
