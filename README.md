@@ -164,7 +164,7 @@ The code for the DTLS over SCTP implementation is in the following files:
 sctp-dtls.c ssl.c server.c client.c
 ```
 
-Use sctp-dtls.c as an entrypoint and drill down from there.
+Use `sctp-dtls.c` as an entrypoint and drill down from there.
 
 **Note:** File `sctp.c` contains an implementation that transmits unencoded messages via SCTP only. I left it in this
-repositories because that's what I started with before adding DTLS with OpenSSL.
+repository because that's what I started with before adding DTLS with OpenSSL.
