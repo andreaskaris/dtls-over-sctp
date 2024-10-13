@@ -156,3 +156,15 @@ and push the image with:
 make build-container-image IMAGE=<image name>
 make push-container-image IMAGE=<image name>
 ```
+
+## Reading the code
+
+The code for the DTLS over SCTP implementation is in the following files:
+```
+sctp-dtls.c ssl.c server.c client.c
+```
+
+Use sctp-dtls.c as an entrypoint and drill down from there.
+
+**Note:** File `sctp.c` contains an implementation that transmits unencoded messages via SCTP only. I left it in this
+repositories because that's what I started with before adding DTLS with OpenSSL.
