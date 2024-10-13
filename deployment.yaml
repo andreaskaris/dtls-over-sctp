@@ -1,0 +1,102 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: read-pods
+  namespace: sctp-dtls
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - list
+  - get
+  - watch
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-pods
+  namespace: sctp-dtls
+subjects:
+- kind: ServiceAccount
+  name: sctp-dtls
+  namespace: sctp-dtls
+roleRef:
+  kind: Role
+  name: read-pods 
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: sctp-dtls-server
+  name: sctp-dtls-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sctp-dtls-server
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: sctp-dtls-server
+    spec:
+      securityContext:
+        sysctls:
+        - name: net.sctp.auth_enable
+          value: "1"
+      serviceAccountName: sctp-dtls
+      containers:
+      - command:
+        - /bin/bash
+        - "-c"
+        - |
+          set -eux
+          /entrypoint/sctp-dtls -h 0.0.0.0 -p 8080 -k /entrypoint/ssl.key -l /entrypoint/ssl.pem
+        image: quay.io/akaris/sctp-dtls:latest
+        name: sctp-dtls-server
+        resources: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: sctp-dtls-client
+  name: sctp-dtls-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sctp-dtls-client
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: sctp-dtls-client
+    spec:
+      securityContext:
+        sysctls:
+        - name: net.sctp.auth_enable
+          value: "1"
+      serviceAccountName: sctp-dtls
+      containers:
+      - command:
+        - /bin/bash
+        - "-c"
+        - |
+          set -eux
+          server_ip="$(/entrypoint/kubectl get pods -l app=sctp-dtls-server -o=jsonpath='{.items[0].status.podIP}')"
+          while true; do
+              /entrypoint/sctp-dtls -c -h ${server_ip} -p 8080 -m "123456789" -i 10 -k /entrypoint/ssl.key -l /entrypoint/ssl.pem
+              sleep 1
+          done
+        image: quay.io/akaris/sctp-dtls:latest
+        name: sctp-dtls
+        resources: {}

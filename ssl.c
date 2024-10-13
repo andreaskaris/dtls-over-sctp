@@ -290,31 +290,33 @@ int ssl_check_error(SSL *ssl, int ret) {
     perror("Socket error");
     return -1;
   case SSL_ERROR_SSL:
+    // The following works starting with OpenSSL v3.2
     // A non-recoverable, fatal error in the SSL library occurred, usually a
     // protocol error.
     /*
      * Some stream fatal error occurred. This could be because of a
      * stream reset - or some failure occurred on the underlying
      * connection.
-     */
+     */ /*
     switch (SSL_get_stream_read_state(ssl)) {
+	    /*
     case SSL_STREAM_STATE_RESET_REMOTE:
       printf("Stream reset occurred\n");
       /*
        * The stream has been reset but the connection is still
        * healthy.
-       */
+       */ /*
       break;
 
     case SSL_STREAM_STATE_CONN_CLOSED:
       printf("Connection closed\n");
-      /* Connection is already closed. */
+      /* Connection is already closed. */ /*
       break;
-
     default:
-      printf("Unknown stream failure\n");
-      break;
-    }
+*/
+    printf("Unknown stream failure\n");
+    /*      break;
+        }*/
     return -1;
   default:
     printf("Unexpected error!\n");
