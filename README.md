@@ -166,5 +166,5 @@ sctp-dtls.c ssl.c server.c client.c
 
 Use `sctp-dtls.c` as an entrypoint and drill down from there.
 
-**Note:** File `sctp.c` contains an implementation that transmits unencoded messages via SCTP only. I left it in this
+**Note:** File `sctp.c` contains an implementation that transmits unencrypted messages via SCTP only. I left it in this
 repository because that's what I started with before adding DTLS with OpenSSL.
